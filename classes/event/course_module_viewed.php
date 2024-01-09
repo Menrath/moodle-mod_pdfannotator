@@ -33,6 +33,6 @@ class course_module_viewed extends \core\event\course_module_viewed {
     }
 
     public static function get_objectid_mapping() {
-        return array('db' => 'pdfannotator', 'restore' => 'pdfannotator');
+        return ['db' => 'pdfannotator', 'restore' => 'pdfannotator'];
     }
 }

@@ -26,7 +26,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-defined('MOODLE_INTERNAL') || die();
+
+use core\context\module as context_module;
+use moodle_exception;
 
 class pdfannotator_annotation {
 
@@ -76,7 +78,7 @@ class pdfannotator_annotation {
         }
 
         if ($success) {
-            $result = array('status' => 'success', 'timemoved' => $time);
+            $result = ['status' => 'success', 'timemoved' => $time];
             if ($annotation->userid != $USER->id) {
                 $result['movedby'] = pdfannotator_get_username($USER->id);
             }
@@ -100,7 +102,7 @@ class pdfannotator_annotation {
     public static function delete($annotationid, $cmid = null, $deleteanyway = null) {
 
         global $DB;
-        $annotation = $DB->get_record('pdfannotator_annotations', array('id' => $annotationid), '*', $strictness = IGNORE_MISSING);
+        $annotation = $DB->get_record('pdfannotator_annotations', ['id' => $annotationid], '*', $strictness = IGNORE_MISSING);
         if (!$annotation) {
             return false;
         }
@@ -112,17 +114,17 @@ class pdfannotator_annotation {
         if ($deletionallowed[0] === true || $deleteanyway === true) {
 
             // Delete all comments of this annotation.
-            $comments = $DB->get_records('pdfannotator_comments', array("annotationid" => $annotationid));
+            $comments = $DB->get_records('pdfannotator_comments', ["annotationid" => $annotationid]);
             foreach ($comments as $commentdata) {
-                $DB->delete_records('pdfannotator_votes', array("commentid" => $commentdata->id));
+                $DB->delete_records('pdfannotator_votes', ["commentid" => $commentdata->id]);
             }
-            $success = $DB->delete_records('pdfannotator_comments', array("annotationid" => $annotationid));
+            $success = $DB->delete_records('pdfannotator_comments', ["annotationid" => $annotationid]);
 
             // Delete subscriptions to the question.
-            $DB->delete_records('pdfannotator_subscriptions', array('annotationid' => $annotationid));
+            $DB->delete_records('pdfannotator_subscriptions', ['annotationid' => $annotationid]);
 
             // Delete the annotation itself.
-            $success = $DB->delete_records('pdfannotator_annotations', array("id" => $annotationid));
+            $success = $DB->delete_records('pdfannotator_annotations', ["id" => $annotationid]);
 
             if ($deleteanyway) {
                 return;
@@ -153,7 +155,7 @@ class pdfannotator_annotation {
 
         // If user has admin rights with regard to annotations/comments: Allow deletion.
         if (!$cm = get_coursemodule_from_id('pdfannotator', $cmid)) {
-            error("Course module ID was incorrect");
+            throw new moodle_exception('error:incorrectCourseModuleID');
         }
         $context = context_module::instance($cm->id);
         $deleteany = has_capability('mod/pdfannotator:deleteany', $context);
@@ -193,7 +195,7 @@ class pdfannotator_annotation {
         if (!$editownpost || $USER->id != self::get_author($annotationid)) {
             return false;
         } else if ($DB->record_exists_select('pdfannotator_comments', "annotationid = ? AND userid != ?",
-            array($annotationid, $USER->id))) {
+            [$annotationid, $USER->id])) {
             // Annotation was answered by other users.
             return false;
         }
@@ -249,7 +251,7 @@ class pdfannotator_annotation {
     public static function get_author($annotationid) {
 
         global $DB;
-        return $DB->get_field('pdfannotator_annotations', 'userid', array('id' => $annotationid), $strictness = MUST_EXIST);
+        return $DB->get_field('pdfannotator_annotations', 'userid', ['id' => $annotationid], $strictness = MUST_EXIST);
     }
 
     /**
@@ -260,7 +262,7 @@ class pdfannotator_annotation {
      */
     public static function get_pageid($annotationid) {
         global $DB;
-        return $DB->get_field('pdfannotator_annotations', 'page', array('id' => $annotationid), $strictness = IGNORE_MISSING);
+        return $DB->get_field('pdfannotator_annotations', 'page', ['id' => $annotationid], $strictness = IGNORE_MISSING);
     }
 
     /**

@@ -57,7 +57,7 @@ class statistics implements \renderable, \templatable {
         $this->tabledata = $statistics->get_tabledata();
 
         $params = $statistics->get_chartdata();
-        $PAGE->requires->js_init_call('addDropdownNavigation', array($capabilities, $id), true);
+        $PAGE->requires->js_init_call('addDropdownNavigation', [$capabilities, $id], true);
         $PAGE->requires->js_init_call('setCharts', $params, true);
     }
 

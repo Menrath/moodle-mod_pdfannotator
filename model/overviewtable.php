@@ -33,13 +33,13 @@ class overviewtable extends flexible_table {
     }
 
     public function setup() {
-        ($this->set_control_variables(array(
+        ($this->set_control_variables([
             TABLE_VAR_SORT    => 'sort',
             TABLE_VAR_HIDE    => 'hide',
             TABLE_VAR_SHOW    => 'show',
             TABLE_VAR_PAGE    => 'page',  // This is used for pagination in the tables.
-            TABLE_VAR_RESET   => 'treset'
-            )));
+            TABLE_VAR_RESET   => 'treset',
+            ]));
         parent::setup();
     }
     /**
@@ -66,7 +66,7 @@ class questionstable extends overviewtable {
         global $OUTPUT;
         // $this->collapsible(true); // Concerns the tables columns.
         $this->define_baseurl($url);
-        $columns = array('col0', 'col1', 'col2', 'col3', 'col4', 'col5');
+        $columns = ['col0', 'col1', 'col2', 'col3', 'col4', 'col5'];
         if ($showdropdown) {
             $columns[] = 'col6'; // Action dropdown menu.
             $this->no_sorting('col6');
@@ -96,7 +96,7 @@ class questionstable extends overviewtable {
         $document = get_string('pdfannotatorcolumn', 'pdfannotator');
         // "<i class='icon fa fa-book fa-fw'></i>" . self::wrap(get_string('pdfannotatorcolumn', 'pdfannotator'));
 
-        $headers = array($question, $whoasked, $votes, $answers, $lastanswered, $document);
+        $headers = [$question, $whoasked, $votes, $answers, $lastanswered, $document];
         if ($showdropdown) {
             $this->column_style('col6', 'width', '5%'); // Action dropdown menu.
             $actionmenu = get_string('overviewactioncolumn', 'pdfannotator');
@@ -126,7 +126,7 @@ class answerstable extends overviewtable {
         global $OUTPUT;
         // $this->collapsible(true); // Concerns the tables columns.
         $this->define_baseurl($url);
-        $this->define_columns(array('col0', 'col1', 'col2', 'col3', 'col4', 'col5'));
+        $this->define_columns(['col0', 'col1', 'col2', 'col3', 'col4', 'col5']);
         $this->column_style('col0', 'width', '30%'); // Answer.
         $this->column_style('col1', 'width', '5%'); // Marked as correct?
         $this->column_style('col2', 'width', '20%'); // Who gave the answer and when.
@@ -147,7 +147,7 @@ class answerstable extends overviewtable {
         // "<i class='icon fa fa-book fa-fw'></i>" . self::wrap(get_string('pdfannotatorcolumn', 'pdfannotator'));
         $actionmenu = get_string('overviewactioncolumn', 'pdfannotator');
         // $OUTPUT->pix_icon('i/settings', '') . self::wrap(get_string('overviewactioncolumn', 'pdfannotator'));
-        $this->define_headers(array($answer, $iscorrect, $whoanswered, $question, $document, $actionmenu));
+        $this->define_headers([$answer, $iscorrect, $whoanswered, $question, $document, $actionmenu]);
         $this->no_sorting('col1');
         $this->no_sorting('col0');
         $this->no_sorting('col5');
@@ -168,7 +168,7 @@ class userspoststable extends overviewtable {
         global $OUTPUT;
         // $this->collapsible(true); // Concerns the tables columns.
         $this->define_baseurl($url);
-        $this->define_columns(array('col0', 'col1', 'col2', 'col3'));
+        $this->define_columns(['col0', 'col1', 'col2', 'col3']);
         $this->column_style('col0', 'width', '60%'); // The user's post.
         $this->column_style('col1', 'width', '18%'); // Time of last modification.
         $this->column_style('col2', 'width', '7%'); // Number of votes for this post.
@@ -184,7 +184,7 @@ class userspoststable extends overviewtable {
         // $OUTPUT->help_icon('voteshelpicon', 'pdfannotator');
         $document = get_string('pdfannotatorcolumn', 'pdfannotator');
         // "<i class='icon fa fa-book fa-fw'></i>" . self::wrap(get_string('pdfannotatorcolumn', 'pdfannotator'));
-        $this->define_headers(array($mypost, $lastedited, $votes, $document));
+        $this->define_headers([$mypost, $lastedited, $votes, $document]);
         $this->no_sorting('col0');
         $this->sortable(true, 'col2', SORT_ASC);
         $this->sortable(true, 'col3', SORT_DESC);
@@ -202,7 +202,7 @@ class reportstable extends overviewtable {
         parent::__construct($this->id);
         global $OUTPUT;
         $this->define_baseurl($url);
-        $this->define_columns(array('col0', 'col1', 'col2', 'col3', 'col4'));
+        $this->define_columns(['col0', 'col1', 'col2', 'col3', 'col4']);
         $this->column_style('col0', 'width', '25%'); // Reported comment.
         $this->column_style('col1', 'width', '20%'); // Who wrote it when.
         $this->column_style('col2', 'width', '25%'); // Report.
@@ -221,7 +221,7 @@ class reportstable extends overviewtable {
         // $OUTPUT->pix_icon('e/insert_time', '') . self::wrap(get_string('on', 'pdfannotator'));
         $actionmenu = get_string('overviewactioncolumn', 'pdfannotator');
         // $OUTPUT->pix_icon('i/settings', '') . self::wrap(get_string('overviewactioncolumn', 'pdfannotator'));
-        $this->define_headers(array($report, $reportedby, $reportedcomment, $writtenby, $actionmenu));
+        $this->define_headers([$report, $reportedby, $reportedcomment, $writtenby, $actionmenu]);
         $this->no_sorting('col0');
         $this->no_sorting('col2');
         $this->no_sorting('col4');

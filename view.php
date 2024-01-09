@@ -34,7 +34,7 @@ $annoid = optional_param('annoid', null, PARAM_INT);
 $commid = optional_param('commid', null, PARAM_INT);
 
 if ($r) {
-    if (!$pdfannotator = $DB->get_record('pdfannotator', array('id' => $r))) {
+    if (!$pdfannotator = $DB->get_record('pdfannotator', ['id' => $r])) {
         print_error('invalidaccessparameter');
     }
     $cm = get_coursemodule_from_instance('pdfannotator', $pdfannotator->id, $pdfannotator->course, false, MUST_EXIST);
@@ -42,7 +42,7 @@ if ($r) {
     if (!$cm = get_coursemodule_from_id('pdfannotator', $id)) {
         print_error('invalidcoursemodule');
     }
-    $pdfannotator = $DB->get_record('pdfannotator', array('id' => $cm->instance), '*', MUST_EXIST);
+    $pdfannotator = $DB->get_record('pdfannotator', ['id' => $cm->instance], '*', MUST_EXIST);
 }
 
 $course = get_course($cm->course); // Get course by id.
@@ -57,7 +57,7 @@ $pdfannotator->name = format_text($pdfannotator->name, FORMAT_MOODLE, ['para' =>
 // Completion and trigger events.
 pdfannotator_view($pdfannotator, $course, $cm, $context);
 
-$PAGE->set_url('/mod/pdfannotator/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/pdfannotator/view.php', ['id' => $cm->id]);
 
 $fs = get_file_storage();
 $files = $fs->get_area_files($context->id, 'mod_pdfannotator', 'content', 0, 'sortorder DESC, id ASC', false);// TODO Not efficient!
@@ -78,11 +78,11 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
 // Render the activity information.
-if ($CFG->version < 2022041900) { 
+if ($CFG->version < 2022041900) {
     $modinfo = get_fast_modinfo($course);
     $cminfo = $modinfo->get_cm($cm->id);
     $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
-    $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);    
+    $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
     echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
 }
 

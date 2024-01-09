@@ -45,11 +45,11 @@ class reportmenu implements \renderable, \templatable {
     public function __construct($report, $cmid, $currentpage, $itemsperpage, $reportfilter) {
         global $CFG;
         if ($report->seen == 0) {
-            $urlparams = array('action' => 'markreportasread');
+            $urlparams = ['action' => 'markreportasread'];
             $iconclass = "icon fa fa-eye-slash fa-fw";
             $label = get_string('markasread', 'pdfannotator');
         } else {
-            $urlparams = array('action' => 'markreportasunread');
+            $urlparams = ['action' => 'markreportasunread'];
             $iconclass = "icon fa fa-eye fa-fw";
             $label = get_string('markasunread', 'pdfannotator');
         }

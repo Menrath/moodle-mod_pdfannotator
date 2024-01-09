@@ -69,19 +69,19 @@ class mod_pdfannotator_renderer extends plugin_renderer_base {
         $row = new html_table_row();
         $cell1 = new html_table_cell(get_string('slotdatetimelabel', 'pdfannotator'));
         $cell2 = $info->datetime;
-        $row->cells = array($cell1, $cell2);
+        $row->cells = [$cell1, $cell2];
         $t->data[] = $row;
 
         $row = new html_table_row();
         $cell1 = new html_table_cell(get_string('author', 'pdfannotator'));
         $cell2 = new html_table_cell($info->author);
-        $row->cells = array($cell1, $cell2);
+        $row->cells = [$cell1, $cell2];
         $t->data[] = $row;
 
         $row = new html_table_row();
         $cell1 = new html_table_cell(get_string('comment', 'pdfannotator'));
         $cell2 = new html_table_cell($info->content);
-        $row->cells = array($cell1, $cell2);
+        $row->cells = [$cell1, $cell2];
         $t->data[] = $row;
 
         $o .= html_writer::table($t);
@@ -101,7 +101,7 @@ class mod_pdfannotator_renderer extends plugin_renderer_base {
      */
     private function pdfannotator_create_tab(moodle_url $baseurl, $action, $namekey = null, $pdfannotatorname = null,
         $nameargs = null) {
-        $taburl = new moodle_url($baseurl, array('action' => $action));
+        $taburl = new moodle_url($baseurl, ['action' => $action]);
         $tabname = get_string($namekey, 'pdfannotator', $nameargs);
         if ($pdfannotatorname) {
             strlen($pdfannotatorname) > 20 ? $tabname = substr($pdfannotatorname, 0, 21) . "..." : $tabname = $pdfannotatorname;
@@ -124,11 +124,11 @@ class mod_pdfannotator_renderer extends plugin_renderer_base {
 
         $overviewtab = $this->pdfannotator_create_tab($baseurl, 'overview', 'overview');
 
-        $level1 = array(
+        $level1 = [
             $overviewtab,
             $this->pdfannotator_create_tab($baseurl, 'view', 'document', $pdfannotatorname),
             $this->pdfannotator_create_tab($baseurl, 'statistic', 'statistic'),
-        );
+        ];
         return $this->tabtree($level1, $selected, $inactive);
     }
 

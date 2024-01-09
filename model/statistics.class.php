@@ -48,7 +48,7 @@ class pdfannotator_statistics {
     public function get_comments_annotator($isquestion, $user = false) {
         global $DB;
 
-        $conditions = array('pdfannotatorid' => $this->annotatorid, 'isquestion' => $isquestion, 'isdeleted' => '0');
+        $conditions = ['pdfannotatorid' => $this->annotatorid, 'isquestion' => $isquestion, 'isdeleted' => '0'];
         if ($user) {
             $conditions['userid'] = $this->userid;
         }
@@ -69,7 +69,7 @@ class pdfannotator_statistics {
         if ($user) {
             $sql .= " AND c.userid = ?";
         }
-        return $DB->count_records_sql($sql, array($this->courseid, $isquestion, '0', $this->userid));
+        return $DB->count_records_sql($sql, [$this->courseid, $isquestion, '0', $this->userid]);
     }
 
     /**
@@ -85,7 +85,7 @@ class pdfannotator_statistics {
                 . "WHERE pdfannotatorid = ? AND isquestion = ? AND isdeleted = ? "
                 . "GROUP BY userid ) AS counts";
 
-        return (float) key($DB->get_records_sql($sql, array($this->annotatorid, $isquestion, '0')));
+        return (float) key($DB->get_records_sql($sql, [$this->annotatorid, $isquestion, '0']));
     }
 
     /**
@@ -102,7 +102,7 @@ class pdfannotator_statistics {
                 . "WHERE a.course = ? AND a.id = c.pdfannotatorid AND c.isquestion = ? AND c.isdeleted = ?"
                 . "GROUP BY c.userid ) AS counts";
 
-        return (float) key($DB->get_records_sql($sql, array($this->courseid, $isquestion, '0')));
+        return (float) key($DB->get_records_sql($sql, [$this->courseid, $isquestion, '0']));
     }
 
     /**
@@ -111,7 +111,7 @@ class pdfannotator_statistics {
      */
     public function get_reports_annotator() {
         global $DB;
-        return $DB->count_records('pdfannotator_reports', array('pdfannotatorid' => $this->annotatorid));
+        return $DB->count_records('pdfannotator_reports', ['pdfannotatorid' => $this->annotatorid]);
     }
 
     /**
@@ -120,7 +120,7 @@ class pdfannotator_statistics {
      */
     public function get_reports_course() {
         global $DB;
-        return $DB->count_records('pdfannotator_reports', array('courseid' => $this->courseid));
+        return $DB->count_records('pdfannotator_reports', ['courseid' => $this->courseid]);
     }
 
     /**
@@ -130,38 +130,38 @@ class pdfannotator_statistics {
     public function get_tabledata() {
         $ret = [];
 
-        $ret[] = array('row' => array(get_string('all_questions', 'pdfannotator'),
-            $this->get_comments_annotator('1'), $this->get_comments_course('1')));
-        $ret[] = array('row' => array(get_string('myquestions', 'pdfannotator'),
-            $this->get_comments_annotator('1', true), $this->get_comments_course('1', true)));
-        $ret[] = array('row' => array(get_string('average_questions', 'pdfannotator') .
+        $ret[] = ['row' => [get_string('all_questions', 'pdfannotator'),
+            $this->get_comments_annotator('1'), $this->get_comments_course('1')]];
+        $ret[] = ['row' => [get_string('myquestions', 'pdfannotator'),
+            $this->get_comments_annotator('1', true), $this->get_comments_course('1', true)]];
+        $ret[] = ['row' => [get_string('average_questions', 'pdfannotator') .
             '<a class="btn btn-link p-a-0" role="button" data-container="body" data-toggle="popover" data-placement="right" ' .
             'data-content="'.get_string('average_help', 'pdfannotator').'" data-html="true" tabindex="0" ' .
             'data-trigger="focus"><li class="icon fa fa-question-circle text-info fa-fw" aria-hidden="true" title="' .
             get_string('entity_helptitle', 'pdfannotator') . ' ' .
             get_string('average', 'pdfannotator').'"></li></a>' , round($this->get_comments_average_annotator('1'), 2),
-            round($this->get_comments_average_course('1'), 2)));
-        $ret[] = array('row' => array(get_string('all_answers', 'pdfannotator'),
-            $this->get_comments_annotator('0'), $this->get_comments_course('0')));
-        $ret[] = array('row' => array(get_string('myanswers', 'pdfannotator'),
-            $this->get_comments_annotator('0', true), $this->get_comments_course('0', true)));
-        $ret[] = array('row' => array(get_string('average_answers', 'pdfannotator') .
+            round($this->get_comments_average_course('1'), 2)]];
+        $ret[] = ['row' => [get_string('all_answers', 'pdfannotator'),
+            $this->get_comments_annotator('0'), $this->get_comments_course('0')]];
+        $ret[] = ['row' => [get_string('myanswers', 'pdfannotator'),
+            $this->get_comments_annotator('0', true), $this->get_comments_course('0', true)]];
+        $ret[] = ['row' => [get_string('average_answers', 'pdfannotator') .
             '<a class="btn btn-link p-a-0" role="button" data-container="body" data-toggle="popover" data-placement="right" ' .
             'data-content="'.get_string('average_help', 'pdfannotator').'" data-html="true" tabindex="0" ' .
             'data-trigger="focus"><li class="icon fa fa-question-circle text-info fa-fw" aria-hidden="true" title="' .
             get_string('entity_helptitle', 'pdfannotator') . ' ' .
             get_string('average', 'pdfannotator').'"></li></a>', round($this->get_comments_average_annotator('0'), 2),
-            round($this->get_comments_average_course('0'), 2)));
-        $ret[] = array('row' => array(get_string('private_comments', 'pdfannotator'),
+            round($this->get_comments_average_course('0'), 2)]];
+        $ret[] = ['row' => [get_string('private_comments', 'pdfannotator'),
             $this->count_private_comments($this->annotatorid, 0) + $this->count_private_comments($this->annotatorid, 1),
-            $this->count_private_comments_in_course()));
-        $ret[] = array('row' => array(get_string('protected_comments', 'pdfannotator'),
+            $this->count_private_comments_in_course()]];
+        $ret[] = ['row' => [get_string('protected_comments', 'pdfannotator'),
             $this->count_protected_comments($this->annotatorid, 1) + $this->count_protected_comments($this->annotatorid, 0),
-            $this->count_protected_comments_in_course()));
+            $this->count_protected_comments_in_course()]];
 
         if ($this->isteacher) {
-            $ret[] = array('row' => array(get_string('reports', 'pdfannotator'), $this->get_reports_annotator(),
-                $this->get_reports_course()));
+            $ret[] = ['row' => [get_string('reports', 'pdfannotator'), $this->get_reports_annotator(),
+                $this->get_reports_course()]];
         }
 
         return $ret;
@@ -214,8 +214,8 @@ class pdfannotator_statistics {
             $names[] = $pdfannotator->get_name();
 
         }
-        $ret = array($names, $otherquestions, $myquestions, $otheranswers, $myanswers, $otherprivate, $myprivate,
-            $otherprotectedquestions, $myprotectedquestions, $otherprotectedanswers, $myprotectedanswers);
+        $ret = [$names, $otherquestions, $myquestions, $otheranswers, $myanswers, $otherprivate, $myprivate,
+            $otherprotectedquestions, $myprotectedquestions, $otherprotectedanswers, $myprotectedanswers];
         return $ret;
     }
 
@@ -229,7 +229,7 @@ class pdfannotator_statistics {
     public static function count_comments_annotator($annotatorid, $isquestion, $userid = false) {
         global $DB;
 
-        $conditions = array('pdfannotatorid' => $annotatorid, 'isquestion' => $isquestion, 'isdeleted' => '0');
+        $conditions = ['pdfannotatorid' => $annotatorid, 'isquestion' => $isquestion, 'isdeleted' => '0'];
         if ($userid) {
             $conditions['userid'] = $userid;
         }
@@ -295,14 +295,14 @@ class pdfannotator_statistics {
         global $DB;
         $sql = "SELECT COUNT(*) FROM {pdfannotator_comments} c JOIN {pdfannotator} a ON "
                 . "a.course = ? AND a.id = c.pdfannotatorid WHERE c.visibility = ? AND c.isdeleted = ?";
-        return $DB->count_records_sql($sql, array($this->courseid, "private", '0'));
+        return $DB->count_records_sql($sql, [$this->courseid, "private", '0']);
     }
 
     public function count_protected_comments_in_course() {
         global $DB;
         $sql = "SELECT COUNT(*) FROM {pdfannotator_comments} c JOIN {pdfannotator} a ON "
                 . "a.course = ? AND a.id = c.pdfannotatorid WHERE c.visibility = ? AND c.isdeleted = ?";
-        return $DB->count_records_sql($sql, array($this->courseid, "protected", '0'));
+        return $DB->count_records_sql($sql, [$this->courseid, "protected", '0']);
     }
 
 }

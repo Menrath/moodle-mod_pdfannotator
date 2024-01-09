@@ -100,6 +100,7 @@ $string['editNotAllowed'] = 'Panning not allowed!';
 $string['emptypdf'] = 'There are no comments in this annotator at present.';
 $string['enterText'] = 'Enter text';
 $string['entity_helptitle'] = 'Help for';
+$string['error:incorrectCourseModuleID'] = 'Course module ID was incorrect';
 $string['error:addAnnotation'] = 'An error has occurred while adding an annotation.';
 $string['error:addComment'] = 'An error has occurred while adding the comment.';
 $string['error:closequestion'] = 'An error has occurred while closing/opening the question.';

@@ -36,7 +36,8 @@ use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-class index implements \renderable, \templatable { // Class should be placed elsewhere.
+class index implements \renderable, \templatable {
+    // Class should be placed elsewhere.
 
     private $usestudenttextbox;
     private $usestudentdrawing;

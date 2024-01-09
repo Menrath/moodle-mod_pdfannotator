@@ -49,12 +49,12 @@ class answermenu implements \renderable, \templatable {
         global $CFG;
         if ($answerfilter == 0 && empty($issubscribed)) { // Show all answers and this answer is not subscribed.
             // No one size fits all.
-            $urlparams = array('action' => 'subscribeQuestion');
+            $urlparams = ['action' => 'subscribeQuestion'];
             $iconclass = "icon fa fa-bell fa-fw";
             $label = get_string('subscribeQuestion', 'pdfannotator');
             $buttonclass = 'comment-subscribe subscribe';
         } else { // Show answers to subscribed questions.
-            $urlparams = array('action' => 'unsubscribeQuestion');
+            $urlparams = ['action' => 'unsubscribeQuestion'];
             $iconclass = "icon fa fa-bell-slash fa-fw";
             $label = get_string('unsubscribeQuestion', 'pdfannotator');
             $buttonclass = 'comment-subscribe unsubscribe';

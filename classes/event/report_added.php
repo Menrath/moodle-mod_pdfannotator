@@ -52,6 +52,6 @@ class report_added extends \core\event\base {
     }
 
     public function get_url() {
-        return new \moodle_url('/mod/pdfannotator/view.php', array('id' => $this->other['cmid'], 'action' => 'overview'));
+        return new \moodle_url('/mod/pdfannotator/view.php', ['id' => $this->other['cmid'], 'action' => 'overview']);
     }
 }

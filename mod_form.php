@@ -37,7 +37,7 @@ class mod_pdfannotator_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
         $mform->setType('general', PARAM_TEXT);
-        $mform->addElement('text', 'name', get_string('setting_alternative_name', 'pdfannotator'), array('size' => '48'));
+        $mform->addElement('text', 'name', get_string('setting_alternative_name', 'pdfannotator'), ['size' => '48']);
         $mform->addHelpButton('name', 'setting_alternative_name', 'pdfannotator');
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -59,7 +59,7 @@ class mod_pdfannotator_mod_form extends moodleform_mod {
         // $fileoptions = array('subdirs' => 0, 'maxbytes' => 0, 'areamaxbytes' => 10485760, 'maxfiles' => 1,
         // 'accepted_types' => '.pdf', 'return_types' => 1 | 2);
         // FILE_INTERNAL | FILE_EXTERNAL was replaced by 1|2, because moodle doesnt't identify FILE_INTERNAL, FILE_EXTERNAL here.
-        $filemanageroptions = array();
+        $filemanageroptions = [];
         $filemanageroptions['accepted_types'] = '.pdf';
         $filemanageroptions['maxbytes'] = 0;
         $filemanageroptions['maxfiles'] = 1; // Upload only one file.
@@ -70,52 +70,52 @@ class mod_pdfannotator_mod_form extends moodleform_mod {
         $mform->addHelpButton('files', 'setting_fileupload', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'usevotes', get_string('setting_usevotes', 'pdfannotator'),
-            get_string('usevotes', 'pdfannotator'), null, array(0, 1));
+            get_string('usevotes', 'pdfannotator'), null, [0, 1]);
         $mform->setType('usevotes', PARAM_BOOL);
         $mform->setDefault('usevotes', $config->usevotes);
         $mform->addHelpButton('usevotes', 'setting_usevotes', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'use_studenttextbox', get_string('setting_use_studenttextbox', 'pdfannotator'),
-                get_string('use_studenttextbox', 'pdfannotator'), null, array(0, 1));
+                get_string('use_studenttextbox', 'pdfannotator'), null, [0, 1]);
         $mform->setType('use_studenttextbox', PARAM_BOOL);
         $mform->setDefault('use_studenttextbox', $config->use_studenttextbox);
         $mform->addHelpButton('use_studenttextbox', 'setting_use_studenttextbox', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'use_studentdrawing', get_string('setting_use_studentdrawing', 'pdfannotator'),
-                get_string('use_studentdrawing', 'pdfannotator'), null, array(0, 1));
+                get_string('use_studentdrawing', 'pdfannotator'), null, [0, 1]);
         $mform->setType('use_studentdrawing', PARAM_BOOL);
         $mform->setDefault('use_studentdrawing', $config->use_studentdrawing);
         $mform->addHelpButton('use_studentdrawing', 'setting_use_studentdrawing', 'pdfannotator');
 
         // XXX second checkbox or change to select.
         $mform->addElement('advcheckbox', 'useprint', get_string('setting_useprint_document', 'pdfannotator'),
-            get_string('useprint', 'pdfannotator'), null, array(0, 1));
+            get_string('useprint', 'pdfannotator'), null, [0, 1]);
         $mform->setType('useprint', PARAM_BOOL);
         $mform->setDefault('useprint', $config->useprint);
         $mform->addHelpButton('useprint', 'setting_useprint_document', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'useprintcomments', get_string('setting_useprint_comments', 'pdfannotator'),
-            get_string('useprint_comments', 'pdfannotator'), null, array(0, 1));
+            get_string('useprint_comments', 'pdfannotator'), null, [0, 1]);
         $mform->setType('useprintcomments', PARAM_BOOL);
         $mform->setDefault('useprintcomments', $config->useprintcomments);
         $mform->addHelpButton('useprintcomments', 'setting_useprint_comments', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'useprivatecomments', get_string('setting_use_private_comments', 'pdfannotator'),
-            get_string('use_private_comments', 'pdfannotator'), null, array(0, 1));
+            get_string('use_private_comments', 'pdfannotator'), null, [0, 1]);
         $mform->setType('useprivatecomments', PARAM_BOOL);
         $mform->setDefault('useprivatecomments', $config->use_private_comments);
         $mform->addHelpButton('useprivatecomments', 'setting_use_private_comments', 'pdfannotator');
 
         $mform->addElement('advcheckbox', 'useprotectedcomments', get_string('setting_use_protected_comments', 'pdfannotator'),
-            get_string('use_protected_comments', 'pdfannotator'), null, array(0, 1));
+            get_string('use_protected_comments', 'pdfannotator'), null, [0, 1]);
         $mform->setType('useprotectedcomments', PARAM_BOOL);
         $mform->setDefault('useprotectedcomments', $config->use_protected_comments);
         $mform->addHelpButton('useprotectedcomments', 'setting_use_protected_comments', 'pdfannotator');
 
         // Add legacy files flag only if used.
         if (isset($this->current->legacyfiles) and $this->current->legacyfiles != RESOURCELIB_LEGACYFILES_NO) {
-            $options = array(RESOURCELIB_LEGACYFILES_DONE => get_string('legacyfilesdone', 'pdfannotator'),
-                RESOURCELIB_LEGACYFILES_ACTIVE => get_string('legacyfilesactive', 'pdfannotator'));
+            $options = [RESOURCELIB_LEGACYFILES_DONE => get_string('legacyfilesdone', 'pdfannotator'),
+                RESOURCELIB_LEGACYFILES_ACTIVE => get_string('legacyfilesactive', 'pdfannotator')];
             $mform->addElement('select', 'legacyfiles', get_string('legacyfiles', 'pdfannotator'), $options);
         }
 
@@ -133,7 +133,7 @@ class mod_pdfannotator_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             $contextid = $this->context->id;
             $draftitemid = file_get_submitted_draft_itemid('files');
-            file_prepare_draft_area($draftitemid, $contextid, 'mod_pdfannotator', 'content', 0, array('subdirs' => true));
+            file_prepare_draft_area($draftitemid, $contextid, 'mod_pdfannotator', 'content', 0, ['subdirs' => true]);
             $defaultvalues['files'] = $draftitemid;
             $this->_form->disabledIf('files', 'update', 'notchecked', 2);
         }
