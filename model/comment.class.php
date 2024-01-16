@@ -64,7 +64,16 @@ class pdfannotator_comment {
         $draftitemid = required_param('pdfannotator_addcomment_editoritemid', PARAM_INT);
         $options = pdfannotator_get_editor_options($context);
 
-        $text = file_save_draft_area_files($draftitemid, $context->id, "mod_pdfannotator", "post",  $commentuuid, $options, $datarecord->content, true);
+        $text = file_save_draft_area_files(
+            $draftitemid,
+            $context->id,
+            "mod_pdfannotator",
+            "post",
+            $commentuuid,
+            $options,
+            $datarecord->content,
+            true
+        );
 
         $datarecord->content = $text;
         $DB->update_record('pdfannotator_comments', $datarecord);
@@ -204,7 +213,11 @@ class pdfannotator_comment {
             } else {
                 $comment->content = $data->content;
                 $comment->displaycontent = pdfannotator_get_relativelink($comment->content, $comment->uuid, $context);
-                $comment->displaycontent = format_text($comment->displaycontent, FORMAT_MOODLE, ['para' => false, 'filter' => true]);
+                $comment->displaycontent = format_text(
+                    $comment->displaycontent,
+                    FORMAT_MOODLE,
+                    ['para' => false, 'filter' => true]
+                );
             }
 
             self::set_username($comment);
@@ -292,7 +305,7 @@ class pdfannotator_comment {
                     if ($workingfine != 0) {
                         $tobedeletedaswell[] = $predecessor->id;
                         if ($predecessor->isquestion) {
-                                $hideannotation = 1; // ... $annotationid;
+                            $hideannotation = 1;
                         }
                     }
                 } else {
@@ -420,7 +433,16 @@ class pdfannotator_comment {
             $draftitemid = required_param('pdfannotator_editcomment_editoritemid', PARAM_INT);
             $options = pdfannotator_get_editor_options($context);
 
-            $text = file_save_draft_area_files($draftitemid, $context->id, "mod_pdfannotator", "post",  $commentid, $options, $content, true);
+            $text = file_save_draft_area_files(
+                $draftitemid,
+                $context->id,
+                "mod_pdfannotator",
+                "post",
+                $commentid,
+                $options,
+                $content,
+                true
+            );
 
             $comment->content = $text;
             $success = $DB->update_record('pdfannotator_comments', $comment);
@@ -430,7 +452,7 @@ class pdfannotator_comment {
 
         if ($success) {
             $content = pdfannotator_get_relativelink($comment->content, $comment->id, $context);
-            $content = format_text($content, $format = FORMAT_MOODLE, $options = ['para' => false, 'filter' => true]);
+            $content = format_text($content, FORMAT_MOODLE, $options = ['para' => false, 'filter' => true]);
             $result = ['status' => 'success', 'timemodified' => $time, 'newContent' => $content];
             if ($comment->userid != $USER->id) {
                 $result['modifiedby'] = pdfannotator_get_username($USER->id);
@@ -466,7 +488,7 @@ class pdfannotator_comment {
         $datarecord->commentid = $commentid;
         $datarecord->userid = $USER->id;
 
-        $DB->insert_record('pdfannotator_votes', $datarecord, $returnid = true);
+        $DB->insert_record('pdfannotator_votes', $datarecord, true);
         $countvotes = self::get_number_of_votes($commentid);
         return $countvotes;
     }
@@ -493,7 +515,7 @@ class pdfannotator_comment {
         $datarecord->annotationid = $annotationid;
         $datarecord->userid = $USER->id;
 
-        $subscriptionid = $DB->insert_record('pdfannotator_subscriptions', $datarecord, $returnid = true);
+        $subscriptionid = $DB->insert_record('pdfannotator_subscriptions', $datarecord, true);
         return $subscriptionid;
     }
 

@@ -17,7 +17,6 @@
 namespace mod_pdfannotator\privacy;
 
 use mod_pdfannotator\privacy\provider;
-use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\tests\provider_testcase;
 use stdClass;
@@ -122,6 +121,13 @@ class provider_test extends provider_testcase {
         $this->answers[] = $answer;
     }
 
+    /**
+     * Test all privacy provider related functionality.
+     *
+     * @covers \mod_pdfannotator\privacy\provider
+     *
+     * @return void
+     */
     public function test_delete_data_for_users() {
         global $DB;
 

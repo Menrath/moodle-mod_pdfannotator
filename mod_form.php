@@ -19,9 +19,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
-}
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once($CFG->dirroot . '/mod/pdfannotator/lib.php');
@@ -113,7 +112,7 @@ class mod_pdfannotator_mod_form extends moodleform_mod {
         $mform->addHelpButton('useprotectedcomments', 'setting_use_protected_comments', 'pdfannotator');
 
         // Add legacy files flag only if used.
-        if (isset($this->current->legacyfiles) and $this->current->legacyfiles != RESOURCELIB_LEGACYFILES_NO) {
+        if (isset($this->current->legacyfiles) && $this->current->legacyfiles != RESOURCELIB_LEGACYFILES_NO) {
             $options = [RESOURCELIB_LEGACYFILES_DONE => get_string('legacyfilesdone', 'pdfannotator'),
                 RESOURCELIB_LEGACYFILES_ACTIVE => get_string('legacyfilesactive', 'pdfannotator')];
             $mform->addElement('select', 'legacyfiles', get_string('legacyfiles', 'pdfannotator'), $options);

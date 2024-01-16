@@ -26,8 +26,6 @@
 namespace mod_pdfannotator\output;
 use moodle_url;
 
-defined('MOODLE_INTERNAL') || die();
-
 class answermenu implements \renderable, \templatable {
 
     private $url;

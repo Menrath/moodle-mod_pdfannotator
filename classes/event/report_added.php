@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_pdfannotator\event;
-defined('MOODLE_INTERNAL') || die();
+
 /**
  * The report_added event class.
  *
@@ -38,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  **/
 class report_added extends \core\event\base {
     protected function init() {
-        $this->data['crud'] = 'c'; // ... c(reate), r(ead), u(pdate), d(elete).
+        $this->data['crud'] = 'c'; // This values are abbreviations: c(reate), r(ead), u(pdate), d(elete).
         $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
         $this->data['objecttable'] = 'pdfannotator_reports';
     }

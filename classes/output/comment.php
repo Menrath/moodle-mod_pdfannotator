@@ -17,8 +17,6 @@
 namespace mod_pdfannotator\output;
 use moodle_url;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renderable for comments.
  *
@@ -31,6 +29,11 @@ class comment implements \renderable, \templatable {
 
     private $comments = [];
     private $questionvisibility;
+
+    // TODO: should these properties really be public?
+    public $annotationid;
+    public $timecreated;
+    public $id;
 
     /**
      * Constructor of renderable for comments.

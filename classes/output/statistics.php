@@ -29,8 +29,6 @@ namespace mod_pdfannotator\output;
 
 use pdfannotator_statistics;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The purpose of this script is to collect the output data for the template and
  * make it available to the renderer.

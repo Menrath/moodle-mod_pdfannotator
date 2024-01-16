@@ -25,13 +25,12 @@
 
 namespace mod_pdfannotator\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
-use core_privacy\local\request\approved_contextlist;
-use core_privacy\local\request\writer;
-use core_privacy\local\metadata\collection;
-use core_privacy\local\request\approved_userlist;
-use core_privacy\local\request\userlist;
+use core\privacy\local\request\approved_contextlist;
+use core\privacy\local\request\writer;
+use core\privacy\local\metadata\collection;
+use core\privacy\local\request\approved_userlist;
+use core\privacy\local\request\userlist;
+use core\context\module as context_module;
 
 /**
  * Description of provider
@@ -50,10 +49,10 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * 3. User preferences stored site-wide within Moodle for the pdfannotator
      * 4. Data being exported to an external location
      *
-     * @param collection $collection
-     * @return collection
+     * @param   collection     $collection The initialised collection to add items to.
+     * @return  collection     A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection): collection {
+    public static function get_metadata(collection $collection) {
 
         // 1. Indicating that you store content in a Moodle subsystem.
         // 1.1 Files uploaded by users are saved.
@@ -208,8 +207,12 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
                     . "FROM {pdfannotator_comments} c "
                     . "JOIN {pdfannotator_annotations} a ON c.annotationid = a.id "
                     . "JOIN {pdfannotator_comments} q ON q.annotationid = c.annotationid "
-                    . "WHERE q.isquestion = :question AND c.isquestion = :normalcomment AND c.userid = :userid AND a.pdfannotatorid = :pdfannotator";
-            $mycomments = $DB->get_records_sql($sql2, ['question' => 1, 'normalcomment' => 0, 'userid' => $userid, 'pdfannotator' => $pdfannotator->id]);
+                    . "WHERE q.isquestion = :question AND c.isquestion = :normalcomment "
+                    . "AND c.userid = :userid AND a.pdfannotatorid = :pdfannotator";
+            $mycomments = $DB->get_records_sql(
+                $sql2,
+                ['question' => 1, 'normalcomment' => 0, 'userid' => $userid, 'pdfannotator' => $pdfannotator->id]
+            );
 
             foreach ($mycomments as $mycomment) {
                 $mycomment->timecreated = pdfannotator_get_user_datetime($mycomment->timecreated);
@@ -217,9 +220,13 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
             // Get all subscriptions of this user (exluding their own questions which they're automatically subscribed to).
             $sql3 = "SELECT c.content
-                    FROM {pdfannotator_subscriptions} s JOIN {pdfannotator_annotations} a ON s.annotationid = a.id JOIN {pdfannotator_comments} c ON c.annotationid = a.id
+                    FROM {pdfannotator_subscriptions} s JOIN {pdfannotator_annotations} a ON s.annotationid = a.id
+                    JOIN {pdfannotator_comments} c ON c.annotationid = a.id
                     WHERE c.isquestion = 1 AND s.userid = :userid AND a.pdfannotatorid = :pdfannotator AND NOT a.userid = :u";
-            $mysubscriptions = $DB->get_records_sql($sql3, ['userid' => $userid, 'pdfannotator' => $pdfannotator->id, 'u' => $userid]);
+            $mysubscriptions = $DB->get_records_sql(
+                $sql3,
+                ['userid' => $userid, 'pdfannotator' => $pdfannotator->id, 'u' => $userid]
+            );
 
             // Get all comments this user voted for in this annotator.
             $sql4 = "SELECT c.content
@@ -237,7 +244,10 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             $sql7 = "SELECT a.data, a.timecreated
                     FROM {pdfannotator_annotations} a JOIN {pdfannotator_annotationtypes} t ON a.annotationtypeid = t.id
                     WHERE t.name IN (:type1, :type2) AND a.userid = :userid AND a.pdfannotatorid = :pdfannotator";
-            $mydrawingsandtextboxes = $DB->get_records_sql($sql7, ['type1' => 'drawing', 'type2' => 'textbox', 'userid' => $userid, 'pdfannotator' => $pdfannotator->id]);
+            $mydrawingsandtextboxes = $DB->get_records_sql(
+                $sql7,
+                ['type1' => 'drawing', 'type2' => 'textbox', 'userid' => $userid, 'pdfannotator' => $pdfannotator->id]
+            );
 
             foreach ($mydrawingsandtextboxes as $mydrawingortextbox) {
                 $mydrawingortextbox->timecreated = pdfannotator_get_user_datetime($mydrawingortextbox->timecreated);
@@ -295,7 +305,8 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         }
 
         // 4. Delete all comments in this annotator.
-        $sql = "SELECT c.id FROM {pdfannotator_comments} c WHERE c.annotationid IN (SELECT a.id FROM {pdfannotator_annotations} a WHERE a.pdfannotatorid = ?)";
+        $sql = "SELECT c.id FROM {pdfannotator_comments} c WHERE c.annotationid IN
+                (SELECT a.id FROM {pdfannotator_annotations} a WHERE a.pdfannotatorid = ?)";
         $comments = $DB->get_records_sql($sql, [$instanceid]);
         foreach ($comments as $comment) {
             $DB->delete_records('pdfannotator_comments', ["id" => $comment->id]);
@@ -334,11 +345,11 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             );
 
             // 2. Delete all votes this user made in this annotator.
-            $sql = "SELECT v.id 
-                    FROM {pdfannotator_votes} v 
-                    WHERE v.userid = ? AND v.commentid IN 
-                        (SELECT c.id 
-                        FROM {pdfannotator_comments} c 
+            $sql = "SELECT v.id
+                    FROM {pdfannotator_votes} v
+                    WHERE v.userid = ? AND v.commentid IN
+                        (SELECT c.id
+                        FROM {pdfannotator_comments} c
                         WHERE c.pdfannotatorid = ?)";
             $votes = $DB->get_records_sql($sql , [$userid, $instanceid]);
             foreach ($votes as $vote) {
@@ -349,8 +360,8 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             $sql = "SELECT s.id
                     FROM {pdfannotator_subscriptions} s
                     WHERE s.userid = ? AND s.annotationid IN
-                        (SELECT a.id 
-                        FROM {pdfannotator_annotations} a 
+                        (SELECT a.id
+                        FROM {pdfannotator_annotations} a
                         WHERE a.pdfannotatorid = ?)";
             $subscriptions = $DB->get_records_sql($sql, [$userid, $instanceid]);
             foreach ($subscriptions as $subscription) {
@@ -372,8 +383,14 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
                 self::empty_or_delete_comment($comment);
             }
 
-            // 5. Select the IDs of all annotations that were made by this user in this annotator. Then call the function to delete the annotation and any adjacent comments.
-            $annotations = $DB->get_fieldset_select('pdfannotator_annotations', 'id', "pdfannotatorid = ? AND userid = ?", [$instanceid, $userid]);
+            // 5. Select the IDs of all annotations that were made by this user in this annotator.
+            // Then call the function to delete the annotation and any adjacent comments.
+            $annotations = $DB->get_fieldset_select(
+                'pdfannotator_annotations',
+                'id',
+                "pdfannotatorid = ? AND userid = ?",
+                [$instanceid, $userid]
+            );
             foreach ($annotations as $annotationid) {
                 self::delete_annotation($annotationid);
             }
@@ -382,7 +399,8 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
     // Status quo:
     // Deleting the initial or final comment of a 'thread' will remove it from the comments table.
-    // Deleting any other comment will merely set the field isdeleted of the comments table to 1, so that the comment will be displayed as deleted within the 'thread'.
+    // Deleting any other comment will merely set the field isdeleted of the comments table to 1,
+    // so that the comment will be displayed as deleted within the 'thread'.
 
     /**
      * Function deletes an annotation and all comments and subscriptions attached to it.
@@ -428,7 +446,12 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         global $DB;
 
         $select = "annotationid = ? AND timecreated > ? AND isdeleted = ?";
-        $wasanswered = $DB->record_exists_select('pdfannotator_comments', $select, [$comment->annotationid, $comment->timecreated, 0]);
+        $wasanswered = $DB->record_exists_select(
+            'pdfannotator_comments',
+            $select,
+            [$comment->annotationid, $comment->timecreated,
+            0]
+        );
 
         // If the comment was answered, empty it and mark it as deleted for a special display.
         if ($wasanswered) {
@@ -437,7 +460,9 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         } else {
 
             // But first: Check if the predecessor was already marked as deleted, too and if so, delete it completely.
-            $sql = "SELECT id, isdeleted from {pdfannotator_comments} WHERE annotationid = ? AND isquestion = ? AND timecreated < ? ORDER BY id DESC";
+            $sql = "SELECT id, isdeleted from {pdfannotator_comments}
+                    WHERE annotationid = ? AND isquestion = ? AND timecreated < ?
+                    ORDER BY id DESC";
             $params = [$comment->annotationid, 0, $comment->timecreated];
 
             $predecessors = $DB->get_records_sql($sql, $params);
@@ -508,7 +533,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
             WHERE cm.id = :contextid";
         $userlist->add_from_sql('userid', $sql, $params);
 
-        // Subscriptions
+        // Subscriptions.
         $sql = "SELECT asub.userid
                 FROM {course_modules} cm
                 JOIN {modules} m ON m.id = cm.module AND m.name = :modulename

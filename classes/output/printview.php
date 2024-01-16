@@ -28,8 +28,6 @@
 
 namespace mod_pdfannotator\output;
 
-defined('MOODLE_INTERNAL') || die();
-
 class printview implements \renderable, \templatable {
 
     private $documentname;

@@ -20,8 +20,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Request URL for transforming latex code into a png image
  * The latex data needs to be added after chl=
